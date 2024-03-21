@@ -11,6 +11,15 @@ local delimiters = {
     ["<"] = ">"
 }
 
+local closing_delimiters = ""
+
+local function update_closing_delimiters()
+    closing_delimiters = ""
+    for _, closing in pairs(delimiters) do
+        closing_delimiters = closing_delimiters .. closing
+    end
+end
+
 local function map(mode, lhs, rhs, opts)
     local options = { noremap = true, silent = true }
     if opts then
@@ -26,7 +35,7 @@ local function remap_Tab()
         local col = vim.fn.col('.')
         local next_char = line:sub(col, col)
 
-        if next_char:match('[%])}"\'`]') then --use delimiters dict to map
+        if string.find(next_char, "[" .. closing_delimiters .. "]") then
             print(1)
             return '<right>'
         else
@@ -37,6 +46,7 @@ local function remap_Tab()
 end
 
 local function remap_backspace()
+    -- todo
     print("backspace is remapped")
 end
 
@@ -52,6 +62,7 @@ local function remap_delimiters()
 end
 
 function M.setup()
+    update_closing_delimiters()
     remap_Tab()
     remap_backspace()
     remap_delimiters()
@@ -68,6 +79,7 @@ M.Add_delimiter = function(new_delimiter)
             return
         end
         table.insert(delimiters, new_delimiter)
+        update_closing_delimiters()
         print("Delimiter " .. new_delimiter .. " added succesfully.")
         return
     else
@@ -85,6 +97,7 @@ M.Remove_delimiter = function(delimiter_to_remove)
     local index = Get_index(delimiters, delimiter_to_remove);
     if index ~= -1 then
         table.remove(delimiters, index)
+        update_closing_delimiters()
         print("Delimiter " .. delimiter_to_remove .. " removed succesfully.")
         return
     end
