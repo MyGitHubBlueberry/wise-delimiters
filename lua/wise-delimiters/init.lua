@@ -1,16 +1,67 @@
-print("hello world")
+local M = {}
 
 local i = "i";
 
-local delimiters = { '"', "'", '(', '{', '[', '<' } --need to know what is closing delimiter
--- local new_delimiters = { {'"', '"'}, {"'", "'"}, {'(', ')'}, {'{', '}'}, 
--- {'[', ']'}, {'<', '>'}}
+local delimiters = {
+    ['"'] = '"',
+    ["'"] = "'",
+    ["{"] = "}",
+    ["["] = "]",
+    ["("] = ")",
+    ["<"] = ">"
+}
 
-local function list_delimiters()
+local function map(mode, lhs, rhs, opts)
+    local options = { noremap = true, silent = true }
+    if opts then
+        options = vim.tbl_extend('force', options, opts)
+    end
+    vim.keymap.set(mode, lhs, rhs, options)
+end
+
+
+local function remap_Tab()
+    map(i, '<Tab>', function()
+        local line = vim.fn.getline('.');
+        local col = vim.fn.col('.')
+        local next_char = line:sub(col, col)
+
+        if next_char:match('[%])}"\'`]') then --use delimiters dict to map
+            print(1)
+            return '<right>'
+        else
+            print(2)
+            return '<Tab>'
+        end
+    end, { expr = true, })
+end
+
+local function remap_backspace()
+    print("backspace is remapped")
+end
+
+
+local function remap_delimiters()
+    for opening_delimiter, closing_delimiter in pairs(delimiters) do
+        map(i, opening_delimiter, opening_delimiter .. closing_delimiter .. "<left>")
+
+        if opening_delimiter == '{' then
+            map(i, '{<CR>', '{<CR>}<ESC>O')
+        end
+    end
+end
+
+function M.setup()
+    remap_Tab()
+    remap_backspace()
+    remap_delimiters()
+end
+
+M.List_delimiters = function()
     print("Here are your delimiters: " .. table.concat(delimiters, ', '))
 end
 
-local function add_delimiter(new_delimiter)
+M.Add_delimiter = function(new_delimiter)
     if Is_char(new_delimiter) then
         if Get_index(delimiters, new_delimiter) ~= -1 then
             print("Delimiters table already contains " .. new_delimiter .. " value. No need to add another one.")
@@ -22,11 +73,11 @@ local function add_delimiter(new_delimiter)
     else
         print(
             "Only characters allowed to be delimeters. Pass one character at a time. Don't forget to use double quotes.")
-            return
+        return
     end
 end
 
-local function remove_delimiter(delimiter_to_remove)
+M.Remove_delimiter = function(delimiter_to_remove)
     if not Is_char(delimiter_to_remove) then
         print("Only characters allowed to be delimeters. Pass one character at a time.")
         return
@@ -54,60 +105,4 @@ function Get_index(table, check_value)
     return -1
 end
 
-function Remap()
-    for _, delimiter in ipairs(delimiters) do
-        Map(i, delimiter .. delimiter .. "<left>")
-        if delimiter == '{' then
-            Map(i, '{<CR>', '{<CR>}<ESC>O')
-        end
-    end
-end
-
-local function setup()
-    -- Remap()
-    Remap_Tab()
-    Remap_backspace()
-end
-
-function Map(mode, lhs, rhs, opts)
-    local options = { noremap = true, silent = true }
-    if opts then
-        options = vim.tbl_extend('force', options, opts)
-    end
-    vim.keymap.set(mode, lhs, rhs, options)
-end
-
-function Remap_delimeters()
-    Map(i, "'", "''<left>")
-    Map(i, '(', '()<left>')
-    Map(i, '[', '[]<left>')
-    Map(i, '{', '{}<left>')
-    Map(i, '{<CR>', '{<CR>}<ESC>O')
-end
-
-function Remap_Tab()
-    Map(i, '<Tab>', function()
-        local line = vim.fn.getline('.');
-        local col = vim.fn.col('.')
-        local next_char = line:sub(col, col)
-
-        if next_char:match('[%])}"\'`]') then
-            print(1)
-            return '<right>'
-        else
-            print(2)
-            return '<Tab>'
-        end
-    end, { expr = true, })
-end
-
-function Remap_backspace()
-    print("backspace is remapped")
-end
-
-return {
-    setup = setup,
-    add_delimiter = add_delimiter,
-    remove_delimiter = remove_delimiter,
-    list_delimiters = list_delimiters,
-}
+return M
