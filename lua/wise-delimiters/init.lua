@@ -1,4 +1,4 @@
-local wr = require("filewr")
+local wr = require("wise-delimiters.filewr")
 
 local M = {}
 
@@ -53,7 +53,7 @@ end
 
 local function remap_backspace()
     -- todo
-    map(i, '<BS>', function ()
+    map(i, '<BS>', function()
         local line = vim.fn.getline('.');
         local col = vim.fn.col('.')
         local next_char = line:sub(col, col)
@@ -83,17 +83,12 @@ local function is_char(possible_char)
     return type(possible_char) == "string" and #possible_char == 1
 end
 
-local function get_index(table, check_value)
-    for index, value in pairs(table) do
-        if value == check_value then
-            return index
-        end
-    end
-    return -1
-end
-
 function M.setup()
-    wr.read(delimiters, savefile)
+    if io.open(savefile) == nil then
+        wr.write(delimiters, savefile)
+    else
+        wr.read(delimiters, savefile)
+    end
     update_delimiters_lookup()
     remap_Tab()
     remap_backspace()
@@ -110,7 +105,7 @@ end
 
 M.add_delimiter_pair = function(opening, closing)
     if is_char(opening) and is_char(closing) then
-        if get_index(delimiters, opening) ~= -1 then
+        if delimiters[opening] ~= nil then
             print("Delimiters table already contains " .. opening .. " value. No need to add another one.")
             return
         end
