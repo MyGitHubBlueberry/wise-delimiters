@@ -12,11 +12,14 @@ local delimiters = {
 }
 
 local closing_delimiters = ""
+local opening_delimiters = ""
 
-local function update_closing_delimiters()
+local function update_delimiters_lookup()
     closing_delimiters = ""
-    for _, closing in pairs(delimiters) do
+    opening_delimiters = ""
+    for opening, closing in pairs(delimiters) do
         closing_delimiters = closing_delimiters .. closing
+        opening_delimiters = opening_delimiters .. opening
     end
 end
 
@@ -48,10 +51,17 @@ end
 local function remap_backspace()
     -- todo
     map(i, '<BS>', function ()
-        -- local line = vim.fn.getline('.');
-        -- local col = vim.fn.col('.')
-        -- local next_char = line:sub(col, col)
-    end)
+        local line = vim.fn.getline('.');
+        local col = vim.fn.col('.')
+        local next_char = line:sub(col, col)
+        local prev_char = line:sub(col - 1, col - 1)
+
+        if string.find("[[" .. closing_delimiters .. "]]", next_char, 1, true) and string.find("[[" .. opening_delimiters .. "]]", prev_char, 1, true) then
+            return '<right><BS><BS>'
+        else
+            return '<BS>'
+        end
+    end, { expr = true, })
 
     print("backspace is remapped")
 end
@@ -80,7 +90,7 @@ local function get_index(table, check_value)
 end
 
 function M.setup()
-    update_closing_delimiters()
+    update_delimiters_lookup()
     remap_Tab()
     remap_backspace()
     remap_delimiters()
@@ -101,7 +111,7 @@ M.add_delimiter_pair = function(opening, closing)
             return
         end
         delimiters[opening] = closing
-        update_closing_delimiters()
+        update_delimiters_lookup()
         print("Delimiters pair   " .. opening .. "-" .. closing .. "   added succesfully.")
         return
     else
@@ -118,7 +128,7 @@ M.remove_delimiter_pair = function(opening)
     end
     if delimiters[opening] ~= nil then
         delimiters[opening] = nil
-        update_closing_delimiters()
+        update_delimiters_lookup()
         print("Delimiter pair removed succesfully.")
         return
     end
