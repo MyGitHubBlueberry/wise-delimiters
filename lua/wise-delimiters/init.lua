@@ -35,11 +35,9 @@ local function remap_Tab()
         local col = vim.fn.col('.')
         local next_char = line:sub(col, col)
 
-        if string.find(next_char, "[" .. closing_delimiters .. "]") then
-            print(1)
+        if string.find(closing_delimiters, next_char) then
             return '<right>'
         else
-            print(2)
             return '<Tab>'
         end
     end, { expr = true, })
@@ -52,13 +50,26 @@ end
 
 
 local function remap_delimiters()
-    for opening_delimiter, closing_delimiter in pairs(delimiters) do
-        map(i, opening_delimiter, opening_delimiter .. closing_delimiter .. "<left>")
+    for opening, closing in pairs(delimiters) do
+        map(i, opening, opening .. closing .. "<left>")
 
-        if opening_delimiter == '{' then
+        if opening == '{' then
             map(i, '{<CR>', '{<CR>}<ESC>O')
         end
     end
+end
+
+local function is_char(possible_char)
+    return type(possible_char) == "string" and #possible_char == 1
+end
+
+local function get_index(table, check_value)
+    for index, value in pairs(table) do
+        if value == check_value then
+            return index
+        end
+    end
+    return -1
 end
 
 function M.setup()
@@ -68,19 +79,23 @@ function M.setup()
     remap_delimiters()
 end
 
-M.List_delimiters = function()
-    print("Here are your delimiters: " .. table.concat(delimiters, ', '))
+M.list_delimiters = function()
+    local all_delimiters = ""
+    for opening, closing in pairs(delimiters) do
+        all_delimiters = all_delimiters .. opening .. "-" .. closing .. "   "
+    end
+    print("Here are your delimiters: " .. all_delimiters)
 end
 
-M.Add_delimiter = function(new_delimiter)
-    if Is_char(new_delimiter) then
-        if Get_index(delimiters, new_delimiter) ~= -1 then
-            print("Delimiters table already contains " .. new_delimiter .. " value. No need to add another one.")
+M.add_delimiter_pair = function(opening, closing)
+    if is_char(opening) and is_char(closing) then
+        if get_index(delimiters, opening) ~= -1 then
+            print("Delimiters table already contains " .. opening .. " value. No need to add another one.")
             return
         end
-        table.insert(delimiters, new_delimiter)
+        delimiters[closing] = opening
         update_closing_delimiters()
-        print("Delimiter " .. new_delimiter .. " added succesfully.")
+        print("Delimiters pair   " .. opening .. "-" .. closing .. "   added succesfully.")
         return
     else
         print(
@@ -89,33 +104,20 @@ M.Add_delimiter = function(new_delimiter)
     end
 end
 
-M.Remove_delimiter = function(delimiter_to_remove)
-    if not Is_char(delimiter_to_remove) then
+M.remove_delimiter_pair = function(opening)
+    if not is_char(opening) then
         print("Only characters allowed to be delimeters. Pass one character at a time.")
         return
     end
-    local index = Get_index(delimiters, delimiter_to_remove);
+    local index = get_index(delimiters, opening);
     if index ~= -1 then
-        table.remove(delimiters, index)
+        delimiters[opening] = nil
         update_closing_delimiters()
-        print("Delimiter " .. delimiter_to_remove .. " removed succesfully.")
+        print("Delimiter pair removed succesfully.")
         return
     end
 
-    print("There is no " .. delimiter_to_remove .. " in delimiters table.")
-end
-
-function Is_char(possible_char)
-    return type(possible_char) == "string" and #possible_char == 1
-end
-
-function Get_index(table, check_value)
-    for index, value in pairs(table) do
-        if value == check_value then
-            return index
-        end
-    end
-    return -1
+    print("There is no " .. opening .. " in delimiters table.")
 end
 
 return M
