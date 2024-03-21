@@ -35,7 +35,9 @@ local function remap_Tab()
         local col = vim.fn.col('.')
         local next_char = line:sub(col, col)
 
-        if string.find(closing_delimiters, next_char) then
+        if next_char == "" then
+            return '<Tab>'
+        elseif string.find(closing_delimiters, next_char) then
             return '<right>'
         else
             return '<Tab>'
@@ -45,9 +47,14 @@ end
 
 local function remap_backspace()
     -- todo
+    map(i, '<BS>', function ()
+        -- local line = vim.fn.getline('.');
+        -- local col = vim.fn.col('.')
+        -- local next_char = line:sub(col, col)
+    end)
+
     print("backspace is remapped")
 end
-
 
 local function remap_delimiters()
     for opening, closing in pairs(delimiters) do
@@ -93,7 +100,7 @@ M.add_delimiter_pair = function(opening, closing)
             print("Delimiters table already contains " .. opening .. " value. No need to add another one.")
             return
         end
-        delimiters[closing] = opening
+        delimiters[opening] = closing
         update_closing_delimiters()
         print("Delimiters pair   " .. opening .. "-" .. closing .. "   added succesfully.")
         return
@@ -109,8 +116,7 @@ M.remove_delimiter_pair = function(opening)
         print("Only characters allowed to be delimeters. Pass one character at a time.")
         return
     end
-    local index = get_index(delimiters, opening);
-    if index ~= -1 then
+    if delimiters[opening] ~= nil then
         delimiters[opening] = nil
         update_closing_delimiters()
         print("Delimiter pair removed succesfully.")
