@@ -44,7 +44,7 @@ use {
 ``` lua
 Plug  'MyGitHubBlueberry/wise-delimiters',  
 { 
-    do= function()
+    do = function()
         require("wise-delimiters").setup()
     end
 }
