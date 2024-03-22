@@ -1,9 +1,15 @@
 # Wise delimiters
 ## Description
-This is nvim plugin that makes sure that you use your delimeters with full comfort. 
-When you type opening delimeter this plugin types pair for it as well and puts your cursor between the delimeters. Then you can delete them both if you press backspace or exit from them by pressing tab in insert mode. In other cases tab and backspace work noramlly.
+I find it really annoying and unfair that neovim treats quotes and braces like single characters. This plugin changes this completely.
+Wise delimiters plugin makes sure that you use your delimeters with full comfort. Here is what it provides:
+- Closing of your quotes and braces now automated
+- Exiting of delimiters using Tab in insert mode
+- Deleting both matching delimiters with one backspace press (if you place you cursor right between them)
+- Customization of your delimiters: add and remove whatever delimiters you like
+- Comfortable nvim command functions, so you can make changes quickly
+
 This idea is not new, you might be familiar with such concept from other code editrors (we don't talk about them).
-If you didn't get the idea of if you just want to see how it works, watch the demo below:
+If you didn't get it or you just want to see how it works, watch the demo below:
 <details>
   <summary>Demonstration</summary>
   
@@ -15,6 +21,7 @@ https://github.com/MyGitHubBlueberry/wise-delimiters/assets/105305430/5a5f674d-b
 </details>
 
 ## Installation
+Don't forget to reopen your nvim :)
 ### Packer
 ```lua
 use {
@@ -46,41 +53,61 @@ vim.cmd([[
 ]])
 ```
 ## Use
-After you called setup function everything is already done for you, but if you want to customize which delimiters you are using, or remind yourself which you already have, you can use following nvim commands in nvim's command mode:
-<details>
-    <summary> List </summary>
-This commands reminds you which delimiters you use.
+After you called setup function, everything is already done for you, but if you want to customize which delimiters you are using, or remind yourself which you already have, you can use following nvim commands in nvim's command mode:
 
+### List 
+This commands reminds you which delimiters you are using. Just execute following line and you will see them under your lua line.
 ``` lua
 :DelimitersList
 ```
+If you didn't change anything yet, after this command execution you will see this:
+```
+Here are your delimiters: {-}  "-"  '-'  <->  [-]  (-)
+```
+Delimiters showing up one by one, connected to ther pairs by hyphens.
+<details>
+  <summary>Demonstration</summary>
+
+https://github.com/MyGitHubBlueberry/wise-delimiters/assets/105305430/893641ec-7c2a-428a-b433-3fdb61221e1c
+
 </details>
 
-<details>
-    <summary> Add </summary>
-This command accepts two arguments: opening and closing delimeters. It allows you to add any delimiter pare, you desire. Exept of those, you already have.
-
+### Add
+This command accepts two arguments: <i><b> opening </i></b> and <i><b>closing</i></b> delimeters. It allows you to add any delimiter pare, you desire. Exept of those, you already have.
 ``` lua
 :DelimitersAdd <opening_delimiter> <closing_delimiter>
 ```
-For some reason you want to add <i>a</i> and <i>b</i> as your delimiters. You can do this by executing following:
-
+For some reason you want to add <i><b>a</i></b> and <i><b>b</i></b> as your delimiters. You can do this by executing following:
 ``` lua
 :DelimitersAdd a b
 ```
-Now <i>a</i> and <i>b</i> added to your delimiter list as <i>opening</i> and <i>closing</i> delimiters respectively.
-</details>
+Now <i><b> a </i></b> and <i><b>b</i></b> added to your delimiter list as <i><b>opening</i></b> and <i><b>closing</i></b> delimiters respectively.
 
 <details>
-    <summary> Remove </summary>
-This function accepts one argument - opening delimiter. It removes delimiter pare tided-up to it.
+  <summary>Demonstration</summary>
+
+
+https://github.com/MyGitHubBlueberry/wise-delimiters/assets/105305430/dc27864c-69da-4b57-a789-5029603952be
+
+</details>
+
+### Remove
+This function accepts one argument - <i><b>opening delimiter</i></b>. It removes delimiter pare tided-up to it.
 
 ``` lua
 :DelimitersRemove <opening_delimiter>
 ```
 
-Lest assume you added those <i>a</i> and <i>b</i> from previous example section. We can remove them now with following command:
+Lest assume you added those <i><b>a</i></b> and <i><b>b</i></b> from previous example section. We can remove them now with following command:
 ``` lua
 :DelimitersRemove a
 ```
+
+<details>
+  <summary>Demonstration</summary>
+
+
+https://github.com/MyGitHubBlueberry/wise-delimiters/assets/105305430/57759d15-7459-41ed-8730-b8d7f509d934
+
+
 </details>
