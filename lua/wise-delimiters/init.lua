@@ -1,4 +1,4 @@
--- check for same line when delete
+require("wise-delimiters.globals")
 local wr = require("wise-delimiters.filewr")
 
 local M = {}
@@ -77,6 +77,13 @@ local function remap_delimiters()
     end
 end
 
+-- local function add_commands()
+--     vim.cmd("command! DelimitersAdd lua M.delimiters_add()")
+--     vim.cmd("command! DelimitersRemove lua M.delimiters_remove()")
+--     vim.cmd("command! DelimitersList lua M.delimiters_list()")
+--     print("commands added")
+-- end
+
 local function is_char(possible_char)
     return type(possible_char) == "string" and #possible_char == 1
 end
@@ -91,9 +98,10 @@ function M.setup()
     remap_Tab()
     remap_backspace()
     remap_delimiters()
+    -- add_commands()
 end
 
-M.list_delimiters = function()
+M.delimiters_list = function()
     local all_delimiters = ""
     for opening, closing in pairs(delimiters) do
         all_delimiters = all_delimiters .. opening .. "-" .. closing .. "   "
@@ -101,7 +109,7 @@ M.list_delimiters = function()
     print("Here are your delimiters: " .. all_delimiters)
 end
 
-M.add_delimiter_pair = function(opening, closing)
+M.delimiters_add = function(opening, closing)
     if is_char(opening) and is_char(closing) then
         if delimiters[opening] ~= nil then
             print("Delimiters table already contains " .. opening .. " value. No need to add another one.")
@@ -119,7 +127,7 @@ M.add_delimiter_pair = function(opening, closing)
     end
 end
 
-M.remove_delimiter_pair = function(opening)
+M.delimiters_remove = function(opening)
     if not is_char(opening) then
         print("Only characters allowed to be delimeters. Pass one character at a time.")
         return
