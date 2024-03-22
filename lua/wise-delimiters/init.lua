@@ -77,12 +77,15 @@ local function remap_delimiters()
 end
 
 local function add_commands()
-    vim.api.nvim_create_user_command('DelimitersList', DelimitersList, { desc = "Lists your delimiters" })
-    vim.api.nvim_create_user_command('DelimitersRemove', 'lua DelimitersRemove(<f-args>)',
+    vim.api.nvim_create_user_command('DelimitersList',
+        DelimitersList,
+        { desc = "Lists your delimiters" })
+    vim.api.nvim_create_user_command('DelimitersRemove',
+        'lua DelimitersRemove(<f-args>)',
         { desc = "Removes delimiter pair (pass opening delimiter into function)", nargs = 1 })
-    vim.api.nvim_create_user_command('DelimitersAdd', 'lua DelimitersAdd(<f-args>)',
+    vim.api.nvim_create_user_command('DelimitersAdd',
+        'lua DelimitersAdd(<f-args>)',
         { desc = "Adds delimiter pair (pass opening and closing delimiters into function)", nargs = '+' })
-    print("commands added")
 end
 
 local function is_char(possible_char)
@@ -102,17 +105,17 @@ function M.setup()
     add_commands()
 end
 
--- function M.enable()
---     print("works")
--- Map keys to DelimitersAdd
--- vim.api.nvim_set_keymap('n', '<leader>da',
---     ':lua DelimitersAdd(vim.fn.input("Opening delimiter: "), vim.fn.input("Closing delimiter: "))<CR>',
---     { noremap = true--[[ , silent = true  ]]})
---
--- -- Map keys to DelimitersRemove
--- vim.api.nvim_set_keymap('n', '<leader>dr', ':lua DelimitersRemove(vim.fn.input("Opening delimiter: "))<CR>',
---     --     { noremap = true--[[ , silent = true  ]]})
--- end
+function M.enable()
+    print("works")
+    -- Map keys to DelimitersAdd
+    vim.api.nvim_set_keymap('n', '<leader>da',
+        ':lua DelimitersAdd(vim.fn.input("Opening delimiter: "), vim.fn.input("Closing delimiter: "))<CR>',
+        { noremap = true , silent = true  })
+
+    -- -- Map keys to DelimitersRemove
+    vim.api.nvim_set_keymap('n', '<leader>dr', ':lua DelimitersRemove(vim.fn.input("Opening delimiter: "))<CR>',
+        { noremap = true , silent = true  })
+end
 
 M.delimiters_list = function()
     local all_delimiters = ""
@@ -135,7 +138,7 @@ M.delimiters_add = function(opening, closing)
         return
     else
         print(
-            "Only characters allowed to be delimeters. Pass one character at a time. Don't forget to use double quotes.")
+            "Only characters allowed to be delimeters. Pass one character at a time.")
         return
     end
 end
