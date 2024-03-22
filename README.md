@@ -24,32 +24,22 @@ https://github.com/MyGitHubBlueberry/wise-delimiters/assets/105305430/5a5f674d-b
 Don't forget to reopen your nvim :)
 ### Packer
 ```lua
-use {
-    'MyGitHubBlueberry/wise-delimiters',
-    config = function()
-        require("wise-delimiters").setup()
-    end
-}
+use 'MyGitHubBlueberry/wise-delimiters'
 ```
 ### Lazy
 ``` lua
 {
-    'MyGitHubBlueberry/wise-delimiters', 
-    config = function()
-        require("wise-delimiters").setup()
-    end
+    'MyGitHubBlueberry/wise-delimiters'
 }
 ```
 ### Plug
 ``` lua
-Plug  'MyGitHubBlueberry/wise-delimiters',  
-{ 
-    do = function()
-        require("wise-delimiters").setup()
-    end
-}
+Plug  'MyGitHubBlueberry/wise-delimiters'
 ```
-
+## Setup
+``` lua
+require("wise-delimiters").setup()
+```
 ## Use
 After you called setup function, everything is already done for you, but if you want to customize which delimiters you are using, or remind yourself which you already have, you can use following nvim commands in nvim's command mode:
 
