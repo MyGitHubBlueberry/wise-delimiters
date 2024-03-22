@@ -1,4 +1,3 @@
-require("wise-delimiters.globals")
 local wr = require("wise-delimiters.filewr")
 
 local M = {}
