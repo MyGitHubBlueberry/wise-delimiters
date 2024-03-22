@@ -88,6 +88,7 @@ local function is_char(possible_char)
 end
 
 function M.setup()
+    vim.api.nvim_create_user_command('DelimitersList', DelimitersList, { desc = "List your delimiters" })
     if io.open(savefile) == nil then
         wr.write(delimiters, savefile)
     else
@@ -141,6 +142,7 @@ M.delimiters_remove = function(opening)
 
     print("There is no " .. opening .. " in delimiters table.")
 end
+
 function DelimitersList()
     M.delimiters_list()
 end
@@ -151,10 +153,6 @@ end
 
 function DelimitersRemove(opening_delimiter)
     M.delimiters_remove(opening_delimiter)
-end
-
-function Test()
-    print("works")
 end
 
 return M
