@@ -40,6 +40,15 @@ use {
     end
 }
 ```
+### Plug
+``` lua
+Plug  'MyGitHubBlueberry/wise-delimiters',  
+{ 
+    do= function()
+        require("wise-delimiters").setup()
+    end
+}
+```
 
 ## Use
 After you called setup function, everything is already done for you, but if you want to customize which delimiters you are using, or remind yourself which you already have, you can use following nvim commands in nvim's command mode:
