@@ -33,9 +33,12 @@ use {
 ```
 ### Lazy
 ``` lua
-require("lazy").setup('MyGitHubBlueberry/wise-delimiters', {
-    require("wise-delimiters").setup()
-})
+{
+    'MyGitHubBlueberry/wise-delimiters', 
+    config = function()
+        require("wise-delimiters").setup()
+    end
+}
 ```
 
 ## Use
