@@ -37,21 +37,7 @@ require("lazy").setup('MyGitHubBlueberry/wise-delimiters', {
     require("wise-delimiters").setup()
 })
 ```
-### Plug
-``` lua
-Plug 'MyGitHubBlueberry/wise-delimiters'
 
--- Configure the plugin using the setup function:
-vim.cmd([[
-    let g:plug_wise_delimiters_config = {
-        \ 'on_startup': 1,
-        \ 'on_demand': 1,
-        \ 'config': function()
-            \ call wise_delimiters#setup()
-        \ endfunction
-    \ }
-]])
-```
 ## Use
 After you called setup function, everything is already done for you, but if you want to customize which delimiters you are using, or remind yourself which you already have, you can use following nvim commands in nvim's command mode:
 
