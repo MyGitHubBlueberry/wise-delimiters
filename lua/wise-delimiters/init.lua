@@ -76,19 +76,20 @@ local function remap_delimiters()
     end
 end
 
--- local function add_commands()
---     vim.cmd("command! DelimitersAdd lua M.delimiters_add()")
---     vim.cmd("command! DelimitersRemove lua M.delimiters_remove()")
---     vim.cmd("command! DelimitersList lua M.delimiters_list()")
---     print("commands added")
--- end
+local function add_commands()
+    vim.api.nvim_create_user_command('DelimitersList', DelimitersList, { desc = "Lists your delimiters" })
+    vim.api.nvim_create_user_command('DelimitersRemove', 'lua DelimitersRemove(<f-args>)',
+        { desc = "Removes delimiter pair (pass opening delimiter into function)", nargs = '1' })
+    vim.api.nvim_create_user_command('DelimitersAdd', 'lua DelimitersAdd(<f-args>)',
+        { desc = "Adds delimiter pair (pass opening and closing delimiters into function)", nargs = '+' })
+    print("commands added")
+end
 
 local function is_char(possible_char)
     return type(possible_char) == "string" and #possible_char == 1
 end
 
 function M.setup()
-    vim.api.nvim_create_user_command('DelimitersList', DelimitersList, { desc = "List your delimiters" })
     if io.open(savefile) == nil then
         wr.write(delimiters, savefile)
     else
@@ -98,8 +99,20 @@ function M.setup()
     remap_Tab()
     remap_backspace()
     remap_delimiters()
-    -- add_commands()
+    add_commands()
 end
+
+-- function M.enable()
+--     print("works")
+-- Map keys to DelimitersAdd
+-- vim.api.nvim_set_keymap('n', '<leader>da',
+--     ':lua DelimitersAdd(vim.fn.input("Opening delimiter: "), vim.fn.input("Closing delimiter: "))<CR>',
+--     { noremap = true--[[ , silent = true  ]]})
+--
+-- -- Map keys to DelimitersRemove
+-- vim.api.nvim_set_keymap('n', '<leader>dr', ':lua DelimitersRemove(vim.fn.input("Opening delimiter: "))<CR>',
+--     --     { noremap = true--[[ , silent = true  ]]})
+-- end
 
 M.delimiters_list = function()
     local all_delimiters = ""
