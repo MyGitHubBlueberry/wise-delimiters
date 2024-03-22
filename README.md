@@ -45,3 +45,42 @@ vim.cmd([[
     \ }
 ]])
 ```
+## Use
+After you called setup function everything is already done for you, but if you want to customize which delimiters you are using, or remind yourself which you already have, you can use following nvim commands in nvim's command mode:
+<details>
+    <summary> List </summary>
+This commands reminds you which delimiters you use.
+
+``` lua
+:DelimitersList
+```
+</details>
+
+<details>
+    <summary> Add </summary>
+This command accepts two arguments: opening and closing delimeters. It allows you to add any delimiter pare, you desire. Exept of those, you already have.
+
+``` lua
+:DelimitersAdd <opening_delimiter> <closing_delimiter>
+```
+For some reason you want to add <i>a</i> and <i>b</i> as your delimiters. You can do this by executing following:
+
+``` lua
+:DelimitersAdd a b
+```
+Now <i>a</i> and <i>b</i> added to your delimiter list as <i>opening</i> and <i>closing</i> delimiters respectively.
+</details>
+
+<details>
+    <summary> Remove </summary>
+This function accepts one argument - opening delimiter. It removes delimiter pare tided-up to it.
+
+``` lua
+:DelimitersRemove <opening_delimiter>
+```
+
+Lest assume you added those <i>a</i> and <i>b</i> from previous example section. We can remove them now with following command:
+``` lua
+:DelimitersRemove a
+```
+</details>
