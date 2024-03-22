@@ -92,31 +92,6 @@ local function is_char(possible_char)
     return type(possible_char) == "string" and #possible_char == 1
 end
 
-function M.setup()
-    if io.open(savefile) == nil then
-        wr.write(delimiters, savefile)
-    else
-        wr.read(delimiters, savefile)
-    end
-    update_delimiters_lookup()
-    remap_Tab()
-    remap_backspace()
-    remap_delimiters()
-    add_commands()
-end
-
-function M.enable()
-    print("works")
-    -- Map keys to DelimitersAdd
-    vim.api.nvim_set_keymap('n', '<leader>da',
-        ':lua DelimitersAdd(vim.fn.input("Opening delimiter: "), vim.fn.input("Closing delimiter: "))<CR>',
-        { noremap = true , silent = true  })
-
-    -- -- Map keys to DelimitersRemove
-    vim.api.nvim_set_keymap('n', '<leader>dr', ':lua DelimitersRemove(vim.fn.input("Opening delimiter: "))<CR>',
-        { noremap = true , silent = true  })
-end
-
 M.delimiters_list = function()
     local all_delimiters = ""
     for opening, closing in pairs(delimiters) do
@@ -158,6 +133,20 @@ M.delimiters_remove = function(opening)
 
     print("There is no " .. opening .. " in delimiters table.")
 end
+
+function M.setup()
+    if io.open(savefile) == nil then
+        wr.write(delimiters, savefile)
+    else
+        wr.read(delimiters, savefile)
+    end
+    update_delimiters_lookup()
+    remap_Tab()
+    remap_backspace()
+    remap_delimiters()
+    add_commands()
+end
+
 
 function DelimitersList()
     M.delimiters_list()
