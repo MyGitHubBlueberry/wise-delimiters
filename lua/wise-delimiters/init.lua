@@ -79,7 +79,7 @@ end
 local function add_commands()
     vim.api.nvim_create_user_command('DelimitersList', DelimitersList, { desc = "Lists your delimiters" })
     vim.api.nvim_create_user_command('DelimitersRemove', 'lua DelimitersRemove(<f-args>)',
-        { desc = "Removes delimiter pair (pass opening delimiter into function)", nargs = '1' })
+        { desc = "Removes delimiter pair (pass opening delimiter into function)", nargs = 1 })
     vim.api.nvim_create_user_command('DelimitersAdd', 'lua DelimitersAdd(<f-args>)',
         { desc = "Adds delimiter pair (pass opening and closing delimiters into function)", nargs = '+' })
     print("commands added")
