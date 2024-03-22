@@ -1,3 +1,4 @@
+-- check for same line when delete
 local wr = require("wise-delimiters.filewr")
 
 local M = {}
@@ -52,21 +53,18 @@ local function remap_Tab()
 end
 
 local function remap_backspace()
-    -- todo
     map(i, '<BS>', function()
         local line = vim.fn.getline('.');
         local col = vim.fn.col('.')
         local next_char = line:sub(col, col)
         local prev_char = line:sub(col - 1, col - 1)
 
-        if string.find(closing_delimiters, next_char, 1, true) and string.find(opening_delimiters, prev_char, 1, true) then
+        if delimiters[prev_char] == next_char then
             return '<right><BS><BS>'
         else
             return '<BS>'
         end
     end, { expr = true, })
-
-    print("backspace is remapped")
 end
 
 local function remap_delimiters()
