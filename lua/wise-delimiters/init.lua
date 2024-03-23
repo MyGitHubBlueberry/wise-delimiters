@@ -1,4 +1,5 @@
 local wr = require("wise-delimiters.filewr")
+--remup again on update
 
 local M = {}
 
@@ -107,7 +108,8 @@ M.delimiters_add = function(opening, closing)
             return
         end
         delimiters[opening] = closing
-        wr.write(delimiters, savefile)
+        local added_pair = { [opening] = closing }
+        wr.append(added_pair)
         update_delimiters_lookup()
         print("Delimiters pair   " .. opening .. "-" .. closing .. "   added succesfully.")
         return
@@ -125,7 +127,7 @@ M.delimiters_remove = function(opening)
     end
     if delimiters[opening] ~= nil then
         delimiters[opening] = nil
-        wr.write(delimiters, savefile)
+        wr.rewrite(delimiters)
         update_delimiters_lookup()
         print("Delimiter pair removed succesfully.")
         return
@@ -135,11 +137,9 @@ M.delimiters_remove = function(opening)
 end
 
 function M.setup()
-    if io.open(savefile) == nil then
-        wr.write(delimiters, savefile)
-    else
-        wr.read(delimiters, savefile)
-    end
+    wr.set_relative_file_path("/" .. savefile)
+    wr.init(delimiters)
+    wr.read(delimiters)
     update_delimiters_lookup()
     remap_Tab()
     remap_backspace()
