@@ -45,9 +45,8 @@ function M.set_relative_file_path(path)
 end
 
 function M.init(data)
-    print(file_path)
     if not is_path_set() then
-        return "Can`t init a file. Set file path first."
+        print("Can`t init a file. Set file path first.")
     end
 
     local file = io.open(file_path, "r")
@@ -60,14 +59,14 @@ end
 
 function M.rewrite(data)
     if not is_path_set() then
-        return "Can`t rewrite a file. Set file path first."
+        print("Can`t rewrite a file. Set file path first.")
     end
     edit_file(data, "w")
 end
 
 function M.append(data)
     if not is_path_set() then
-        return "Can`t write a file. Set file path first."
+        print("Can`t write a file. Set file path first.")
     end
     edit_file(data, "a")
 end
@@ -76,13 +75,13 @@ function M.read()
     local data = {};
 
     if not is_path_set() then
-        return "Can`t read a file. Set file path first."
+        print("Can`t read a file. Set file path first.")
     end
 
     local file = io.open(file_path, "r")
 
     if file_is_empty(file_path) or file == nil then
-        return
+        return data
     end
 
     for line in file:lines() do
