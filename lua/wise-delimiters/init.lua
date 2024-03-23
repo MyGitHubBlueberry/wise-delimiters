@@ -35,7 +35,6 @@ local function map(mode, lhs, rhs, opts)
     vim.keymap.set(mode, lhs, rhs, options)
 end
 
-
 local function remap_Tab()
     map(i, '<Tab>', function()
         local line = vim.fn.getline('.');
@@ -77,6 +76,12 @@ local function remap_delimiters()
     end
 end
 
+local function remap_all()
+    remap_delimiters()
+    remap_backspace()
+    remap_Tab()
+end
+
 local function add_commands()
     vim.api.nvim_create_user_command('DelimitersList',
         DelimitersList,
@@ -111,6 +116,7 @@ M.delimiters_add = function(opening, closing)
         local added_pair = { [opening] = closing }
         wr.append(added_pair)
         update_delimiters_lookup()
+        remap_all()
         print("Delimiters pair   " .. opening .. "-" .. closing .. "   added succesfully.")
         return
     else
@@ -129,6 +135,7 @@ M.delimiters_remove = function(opening)
         delimiters[opening] = nil
         wr.rewrite(delimiters)
         update_delimiters_lookup()
+        remap_all()
         print("Delimiter pair removed succesfully.")
         return
     end
