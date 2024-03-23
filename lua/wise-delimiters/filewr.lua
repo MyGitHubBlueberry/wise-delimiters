@@ -49,8 +49,11 @@ function M.init(data)
         return "Can`t init a file. Set file path first."
     end
 
-    if file_is_empty(file_path) then
-        M.append(data)
+    local file = io.open(file_path, "r")
+
+    if file == nil or file_is_empty(file_path) then
+        edit_file(data, "w")
+        return
     end
 end
 
@@ -77,6 +80,10 @@ function M.read(data)
 
     if file_is_empty(file_path) or file == nil then
         return
+    end
+
+    for i, _ in ipairs(data) do
+        table.remove(data, i)
     end
 
     for line in file:lines() do
