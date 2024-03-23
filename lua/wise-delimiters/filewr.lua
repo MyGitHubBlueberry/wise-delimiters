@@ -42,7 +42,6 @@ end
 
 function M.set_relative_file_path(path)
     file_path = get_data_directory() .. path
-    print(file_path)
 end
 
 function M.init(data)
@@ -57,7 +56,6 @@ function M.init(data)
         edit_file(data, "w")
         return
     end
-    print("no data added")
 end
 
 function M.rewrite(data)
