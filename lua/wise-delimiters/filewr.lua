@@ -42,9 +42,11 @@ end
 
 function M.set_relative_file_path(path)
     file_path = get_data_directory() .. path
+    print(file_path)
 end
 
 function M.init(data)
+    print(file_path)
     if not is_path_set() then
         return "Can`t init a file. Set file path first."
     end
@@ -55,6 +57,7 @@ function M.init(data)
         edit_file(data, "w")
         return
     end
+    print("no data added")
 end
 
 function M.rewrite(data)
@@ -71,7 +74,9 @@ function M.append(data)
     edit_file(data, "a")
 end
 
-function M.read(data)
+function M.read()
+    local data = {};
+
     if not is_path_set() then
         return "Can`t read a file. Set file path first."
     end
@@ -82,10 +87,6 @@ function M.read(data)
         return
     end
 
-    for i, _ in ipairs(data) do
-        table.remove(data, i)
-    end
-
     for line in file:lines() do
         local key, value = line:match("(%S+)%s*=%s*(%S+)")
         if key and value then
@@ -94,6 +95,8 @@ function M.read(data)
     end
 
     file:close()
+
+    return data;
 end
 
 return M

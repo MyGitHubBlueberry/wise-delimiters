@@ -146,7 +146,11 @@ end
 function M.setup()
     wr.set_relative_file_path("/" .. savefile)
     wr.init(delimiters)
-    wr.read(delimiters)
+    local file_delimiters = wr.read()
+    delimiters = {}
+    for key, value in pairs(file_delimiters) do
+        delimiters[key] = value
+    end
     update_delimiters_lookup()
     remap_Tab()
     remap_backspace()
