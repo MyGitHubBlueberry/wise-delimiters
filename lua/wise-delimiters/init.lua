@@ -1,5 +1,5 @@
+-- return function to map and do not remap tab and other keys by default
 local wr = require("wise-delimiters.filewr")
---remup again on update
 
 local M = {}
 
@@ -141,6 +141,7 @@ M.delimiters_remove = function(opening)
 		wr.rewrite(delimiters)
 		update_delimiters_lookup()
 		remap_all()
+        vim.api.nvim_del_keymap('i', opening);
 		print("Delimiter pair removed succesfully.")
 		return
 	end
